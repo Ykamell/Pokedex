@@ -1,9 +1,94 @@
-import { Layout } from "../Components/Layout/Layout"
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Filters } from '../Components/Filters/Filters';
+import { Layout } from '../Components/Layout/Layout';
+import PokemonList from '../Components/PokemonList/PokemonList';
+import { Pagination } from '@mui/material';
+import './Home.css'
 
-export const Home = () => {
+interface Type {
+  name: string;
+}
+
+interface Pokemon {
+  name: string;
+  url: string; 
+}
+
+export const Home: React.FC = () => {
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [filteredPokemons, setFilteredPokemons] = useState<Pokemon[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedType, setSelectedType] = useState<string>('');
+  const [types, setTypes] = useState<Type[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const itemsPerPage = 20;
+
+  useEffect(() => {
+    const fetchPokemons = async () => {
+      const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=1000');
+      setPokemons(response.data.results);
+      setFilteredPokemons(response.data.results);
+    };
+
+    fetchPokemons();
+  }, []);
+
+  useEffect(() => {
+    const fetchTypes = async () => {
+      const response = await axios.get('https://pokeapi.co/api/v2/type');
+      setTypes(response.data.results);
+    };
+
+    fetchTypes();
+  }, []);
+
+  useEffect(() => {
+    let filtered = pokemons;
+
+    if (searchTerm) {
+      filtered = filtered.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (selectedType) {
+      const fetchPokemonsByType = async () => {
+        const response = await axios.get(`https://pokeapi.co/api/v2/type/${selectedType}`);
+        const typePokemons = response.data.pokemon.map((p: { pokemon: Pokemon }) => p.pokemon);
+        
+        filtered = filtered.filter((pokemon) => 
+          typePokemons.some((typePokemon: { name: string; }) => typePokemon.name === pokemon.name)
+        );
+
+        setFilteredPokemons(filtered);
+      };
+
+      fetchPokemonsByType();
+    } else {
+      setFilteredPokemons(filtered);
+    }
+  }, [searchTerm, selectedType, pokemons]);
+
+  const paginatedPokemons = filteredPokemons.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
   return (
     <Layout>
-      f
+      <Filters 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+        selectedType={selectedType} 
+        setSelectedType={setSelectedType} 
+        types={types} 
+      />
+      <PokemonList pokemons={paginatedPokemons} />
+      <Pagination
+        className='pagination-home'
+        count={Math.ceil(filteredPokemons.length / itemsPerPage)}
+        page={page}
+        onChange={(e, value) => setPage(value)}
+        color="primary"
+      />
     </Layout>
-  )
-}
+  );
+};

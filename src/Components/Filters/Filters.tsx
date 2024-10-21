@@ -1,13 +1,38 @@
-import { TextField, Button } from '@mui/material'
+import React from 'react';
+import { TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import './Filters.css';
 
-export const Filters = () => {
+interface FiltersProps {
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  selectedType: string;
+  setSelectedType: (type: string) => void;
+  types: { name: string }[]; 
+}
+
+export const Filters: React.FC<FiltersProps> = ({ searchTerm, setSearchTerm, selectedType, setSelectedType, types }) => {
   return (
     <div className="search-filter">
-        <TextField id="outlined-basic" label="Buscar Pokémon" variant="outlined" />
-        <Button variant="contained" disableElevation>
-          Ver Resultados
-        </Button>
-        <TextField id="outlined-basic" label="Buscar Pokémon" variant="outlined" />
+      <TextField
+        className='search-bar'
+        id="search-pokemon"
+        label="Buscar Pokémon"
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <FormControl className='select-type'>
+        <InputLabel>Seleccionar Tipo</InputLabel>
+        <Select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+        >
+          <MenuItem value="">Todos</MenuItem>
+          {types.map((type) => (
+            <MenuItem key={type.name} value={type.name}>{type.name}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
-  )
-}
+  );
+};
