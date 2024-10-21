@@ -1,4 +1,4 @@
-# Pokedex 
+# Pokédex 
 Pokédex es una aplicación web sencilla para explorar información sobre Pokémon, incluyendo nombres, tipos y habilidades. Desarrollada con React y Axios.
 
 ## Funcionalidades
