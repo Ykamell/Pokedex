@@ -1,5 +1,5 @@
 # Pokédex 
-Pokédex es una aplicación web sencilla que interactúa con la PokeAPI con el fin de explorar información sobre Pokémon, incluyendo nombres, tipos y habilidades. Desarrollada con React y Axios.
+Pokédex es una aplicación web sencilla que interactúa con la [PokeAPI](https://pokeapi.co/) con el fin de explorar información sobre Pokémon, incluyendo nombres, tipos y habilidades. Desarrollada con React y Axios.
 
 ## Funcionalidades
 - Lista de Pokémon.
