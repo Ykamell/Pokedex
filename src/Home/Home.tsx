@@ -86,7 +86,7 @@ export const Home: React.FC = () => {
         className='pagination-home'
         count={Math.ceil(filteredPokemons.length / itemsPerPage)}
         page={page}
-        onChange={(e, value) => setPage(value)}
+        onChange={(_e, value) => setPage(value)}
         color="primary"
       />
     </Layout>
