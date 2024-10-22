@@ -56,7 +56,7 @@ export const Home: React.FC = () => {
       const fetchPokemonsByType = async () => {
         const response = await axios.get(`https://pokeapi.co/api/v2/type/${selectedType}`);
         const typePokemons = response.data.pokemon.map((p: { pokemon: Pokemon }) => p.pokemon);
-        
+        setPage(1);
         filtered = filtered.filter((pokemon) => 
           typePokemons.some((typePokemon: { name: string; }) => typePokemon.name === pokemon.name)
         );
